@@ -27,7 +27,9 @@ FracAtlas Dataset : [Link](https://figshare.com/articles/dataset/The_dataset/223
 
 # Train OrGAN
 For training OrGAN, use the following steps:
-1) After preparing simulated dataset, 
+1) After preparing the simulated dataset in the previous step, split the data into train and test and move them to the OrGAN/data/Train and OrGAN/data/Test folders.
+2) After preparing the real dataset (VinDr-CXR train set), move the data to OrGAN/data/Train/Xray folder.
+3) Finally, run the OrGAN/train.ipynb
 
 # Trained Model Weight
 [Drive Link](https://buetedu-my.sharepoint.com/:u:/g/personal/kawsarahmed_bme_buet_ac_bd/Ee01wk04QAlPjgNOezHTYq4BOc6anbIAB2Ym1Y8dlRCCCg?e=YLcXzy)
