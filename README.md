@@ -31,6 +31,6 @@ For inference on chest X-rays:
 3) Run the OrGAN/inferenceRealX.ipynb.
 
 # Comparison 
-![Comparison](images/comparison.gif)
+![Comparison](images/Video.gif)
 
 # Citing OrGAN
