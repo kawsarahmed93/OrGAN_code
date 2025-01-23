@@ -30,8 +30,7 @@ For inference on chest X-rays:
 2) Place some real X-ray dicom files inside folder: "OrGAN/data/Xray_real/real/"
 3) Run the OrGAN/inferenceRealX.ipynb.
 
-# Sample Output 
-![Mask](mask.jpg)
+# Comparison 
+![Comparison](images/comparison.gif)
 
-# Requirements
-pip install requirements.txt
+# Citing OrGAN
