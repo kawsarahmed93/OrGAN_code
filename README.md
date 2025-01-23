@@ -26,7 +26,8 @@ FracAtlas Dataset : [Link](https://figshare.com/articles/dataset/The_dataset/223
 2) Use the VinBiG-process.ipynb to process the real X-ray dicom files for training OrGAN.
 
 # Train OrGAN
-
+For training OrGAN, use the following steps:
+1) After preparing simulated dataset, 
 
 # Trained Model Weight
 [Drive Link](https://buetedu-my.sharepoint.com/:u:/g/personal/kawsarahmed_bme_buet_ac_bd/Ee01wk04QAlPjgNOezHTYq4BOc6anbIAB2Ym1Y8dlRCCCg?e=YLcXzy)
