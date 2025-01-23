@@ -10,7 +10,7 @@ Chest X-rays are widely used to diagnose conditions such as fractures, pneumonia
 # Proposed Architecture: OrGAN
 ![Architecture](images/OrGAN.png)
 
-# Dataset Preparation
+# Datasets used
 
 For OrGAN training:
   We have used real X-ray data from the publicly available VinBigDr-CXR dataset: [Link](https://vindr.ai/datasets/cxr) </br>
@@ -20,6 +20,10 @@ The experiments are conducted on three publicly available datasets, </br>
 VinDr-CXR test set : [Link](https://vindr.ai/datasets/cxr)</br>
 National Institutes of Health (NIH) Chest X-ray Dataset : [Link](https://huggingface.co/datasets/alkzar90/NIH-Chest-X-ray-dataset)</br>
 FracAtlas Dataset : [Link](https://figshare.com/articles/dataset/The_dataset/22363012?file=43283628)</br>
+
+# Dataset Preparation
+1) Use the CT2Xray-process.ipynb to generate simulated dataset of chest X-rays with lung images from LUNA16 dataset for training OrGAN
+2) Use the VinBiG-process.ipynb to process the real X-ray dicom files for training OrGAN
 
 # Trained Model Weight
 [Drive Link](https://buetedu-my.sharepoint.com/:u:/g/personal/kawsarahmed_bme_buet_ac_bd/Ee01wk04QAlPjgNOezHTYq4BOc6anbIAB2Ym1Y8dlRCCCg?e=YLcXzy)
