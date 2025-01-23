@@ -1,5 +1,5 @@
 # OrGAN: Towards organ-level image separation in projection radiographs using generative AI 
-<p align="justify"> This repo contains the supported pytorch code and configuration files to reproduce the results of "OrGAN: Towards organ-level image separation in projection radiographs using generative AI" Article. </p>
+<p align="justify"> This repo contains the supported pytorch code to reproduce the results of "OrGAN: Towards organ-level image separation in projection radiographs using generative AI" Article. </p>
 
 # Abstract
 
