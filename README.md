@@ -10,6 +10,17 @@ Chest X-rays are widely used to diagnose conditions such as fractures, pneumonia
 # Proposed Architecture: OrGAN
 ![Architecture](images/OrGAN.png)
 
+# Dataset Preparation
+
+For OrGAN training:
+  We have used real X-ray data from the publicly available VinBigDr-CXR dataset: [Link](https://vindr.ai/datasets/cxr) </br>
+  Additionally, we have created a simulated dataset of chest X-rays with lung (label) from the publicly available LUNA16 CT scan dataset: [Link](https://luna16.grand-challenge.org/Download/)</br>
+
+The experiments are conducted on three publicly available datasets, </br>
+VinDr-CXR test set : [Link](https://vindr.ai/datasets/cxr)</br>
+National Institutes of Health (NIH) Chest X-ray Dataset : [Link](https://huggingface.co/datasets/alkzar90/NIH-Chest-X-ray-dataset)</br>
+FracAtlas Dataset : [Link](https://figshare.com/articles/dataset/The_dataset/22363012?file=43283628)</br>
+
 # Data Link
 https://drive.google.com/drive/folders/1gISKPOiDuZTAXkGeQ6-TMb3190v4Xhyc
 
