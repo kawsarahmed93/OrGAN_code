@@ -25,7 +25,10 @@ FracAtlas Dataset : [Link](https://figshare.com/articles/dataset/The_dataset/223
 [Drive Link](https://buetedu-my.sharepoint.com/:u:/g/personal/kawsarahmed_bme_buet_ac_bd/Ee01wk04QAlPjgNOezHTYq4BOc6anbIAB2Ym1Y8dlRCCCg?e=YLcXzy)
 
 # Inference on Real X-ray:
-For inference on chest X-rays, download the model weight and place it inside folder: "OrGAN/model_weights/1/". Place some real X-ray dicom files inside folder: "OrGAN/data/Xray_real/real/" and run the OrGAN/inferenceRealX.ipynb.
+For inference on chest X-rays: 
+1) Download the model weight and place it inside folder: "OrGAN/model_weights/1/".
+2) Place some real X-ray dicom files inside folder: "OrGAN/data/Xray_real/real/"
+3) Run the OrGAN/inferenceRealX.ipynb.
 
 # Sample Output 
 ![Mask](mask.jpg)
