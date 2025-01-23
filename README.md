@@ -21,8 +21,11 @@ VinDr-CXR test set : [Link](https://vindr.ai/datasets/cxr)</br>
 National Institutes of Health (NIH) Chest X-ray Dataset : [Link](https://huggingface.co/datasets/alkzar90/NIH-Chest-X-ray-dataset)</br>
 FracAtlas Dataset : [Link](https://figshare.com/articles/dataset/The_dataset/22363012?file=43283628)</br>
 
-# Data Link
-https://drive.google.com/drive/folders/1gISKPOiDuZTAXkGeQ6-TMb3190v4Xhyc
+# Trained Model Weight
+[Drive Link](https://buetedu-my.sharepoint.com/:u:/g/personal/kawsarahmed_bme_buet_ac_bd/Ee01wk04QAlPjgNOezHTYq4BOc6anbIAB2Ym1Y8dlRCCCg?e=YLcXzy)
+
+# Inference on Real X-ray:
+For inference on chest X-rays, download the model weight and place it inside folder: "OrGAN/model_weights/1/". Place some real X-ray dicom files inside folder: "OrGAN/data/Xray_real/real/" and run the OrGAN/inferenceRealX.ipynb.
 
 # Sample Output 
 ![Mask](mask.jpg)
