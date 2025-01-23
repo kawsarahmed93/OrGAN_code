@@ -25,6 +25,9 @@ FracAtlas Dataset : [Link](https://figshare.com/articles/dataset/The_dataset/223
 1) Use the CT2Xray-process.ipynb to generate simulated dataset from LUNA16 CT scans for training OrGAN.
 2) Use the VinBiG-process.ipynb to process the real X-ray dicom files for training OrGAN.
 
+# Training OrGAN
+
+
 # Trained Model Weight
 [Drive Link](https://buetedu-my.sharepoint.com/:u:/g/personal/kawsarahmed_bme_buet_ac_bd/Ee01wk04QAlPjgNOezHTYq4BOc6anbIAB2Ym1Y8dlRCCCg?e=YLcXzy)
 
