@@ -32,7 +32,7 @@ For training OrGAN, use the following steps:
 3) Finally, run the OrGAN/train.ipynb
 
 # Trained Model Weight
-[Drive Link](https://buetedu-my.sharepoint.com/:f:/g/personal/kawsarahmed_bme_buet_ac_bd/Eu_SGBeFGxlAuSIQCRv1arcBDrWg-YLURv-aAlq_6JqyTA?e=waDzzd)
+[Drive Link](#) Will be uploaded soon ...
 
 # Inference on Real X-ray:
 For inference on chest X-rays: 
