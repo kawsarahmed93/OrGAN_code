@@ -36,7 +36,7 @@ Pre-trained model weight of the best model and preprocessed training data can be
 
 # Inference on Real X-ray:
 For inference on chest X-rays: 
-1) Download the model weight and place it inside folder: "OrGAN/model_weights/1/".
+1) Download the model weight and place it inside folder: "OrGAN/model_weights/".
 2) Place some real X-ray dicom files inside folder: "OrGAN/data/Xray_real/real/"
 3) Run the OrGAN/inferenceRealX.ipynb.
 
