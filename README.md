@@ -31,8 +31,8 @@ For training OrGAN, use the following steps:
 2) After preparing the real dataset (VinDr-CXR train set), move the data to OrGAN/data/Train/Xray folder.
 3) Finally, run the OrGAN/train.ipynb
 
-# Trained Model Weight
-Pre-trained model weight of the best model can be downloaded from here. [Drive Link](https://buetedu-my.sharepoint.com/:f:/g/personal/kawsarahmed_bme_buet_ac_bd/ErzzDDguhH9MrAHfK4XUl8UBdhd6-y75sH-cGlka0uO2gg?e=Fq8okp) 
+# Pre-trained Model Weight and Preprocessed training data
+Pre-trained model weight of the best model and preprocessed training data can be downloaded from here. [Fileshare Link](https://figshare.com/s/49b395a6c9a883cfeb8f) 
 
 # Inference on Real X-ray:
 For inference on chest X-rays: 
