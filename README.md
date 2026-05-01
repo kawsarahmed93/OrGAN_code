@@ -22,7 +22,7 @@ National Institutes of Health (NIH) Chest X-ray Dataset : [Link](https://hugging
 FracAtlas Dataset : [Link](https://figshare.com/articles/dataset/The_dataset/22363012?file=43283628)</br>
 
 # Dataset Preparation
-1) Use the CT2Xray-process.ipynb to generate simulated dataset from LUNA16 CT scans for training OrGAN.
+1) Use the CT2Xray-process.ipynb to generate simulated dataset from LUNA16 CT scans for training OrGAN. You can download the preprocessed dataset from here. [Link](https://figshare.com/s/49b395a6c9a883cfeb8f)
 2) Use the VinBiG-process.ipynb to process the real X-ray dicom files for training OrGAN.
 
 # Train OrGAN
