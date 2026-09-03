@@ -29,7 +29,14 @@ FracAtlas Dataset : [Link](https://figshare.com/articles/dataset/The_dataset/223
 For training OrGAN, use the following steps:
 1) After preparing the simulated dataset in the previous step, split the data into train and test and move them to the OrGAN/data/Train and OrGAN/data/Test folders.
 2) After preparing the real dataset (VinDr-CXR train set), move the data to OrGAN/data/Train/Xray folder.
-3) Finally, run the OrGAN/train.ipynb
+3) Finally, run the training script:
+
+```bash
+cd OrGAN
+python train.py --seed 0
+```
+
+Key flags: `--seed` (vary across repeats), `--epochs` (default 100, early stopping may end a run sooner), and `--grl-lambda-max` / `--grl-e0` / `--grl-ramp-epochs` for the gradient-reversal schedule. Validation PSNR and MS-SSIM are computed each epoch on an EMA copy of the generator, per-epoch metrics are written to `epoch_data.csv`, and the best-PSNR checkpoint is saved for inference. See `OrGAN/README.md` for the full description.
 
 # Pre-trained Model Weight and Preprocessed training data
 Pre-trained model weight of the best model and preprocessed training data can be downloaded from here. [Fileshare Link](https://figshare.com/s/49b395a6c9a883cfeb8f) 
@@ -39,6 +46,17 @@ For inference on chest X-rays:
 1) Download the model weight and place it inside folder: "OrGAN/model_weights/".
 2) Place some real X-ray dicom files inside folder: "OrGAN/data/Xray_real/real/"
 3) Run the OrGAN/inferenceRealX.ipynb.
+
+To generate lung images for a whole directory instead of one at a time, use `OrGAN/getLung.py`:
+
+```bash
+cd OrGAN
+python getLung.py --ckpt <checkpoint> --images <xray_dir> --out <lung_dir>
+```
+
+# Downstream Classifier
+
+`Classifier/` contains the thoracic disease classifier used to test whether the generated lung images retain diagnostic information, and whether pairing them with the original radiograph helps. Three configurations are trained and evaluated identically under 5-fold cross-validation: chest X-ray only (`xray_base`), generated lung image only (`lung_base`), and a two-stream gated fusion of both (`proposed`). See `Classifier/README.md`.
 
 # Comparison 
 ![Comparison](images/Video.gif)

@@ -1,2 +1,17 @@
-*.raw
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# model weights and large artefacts
 *.ckpt
+*.pth
+*.raw
+*.log
+
+# local run outputs (NOTE: *.npy is deliberately NOT ignored -
+# the small sample arrays under LUNA16/, OrGAN/data/ and vinbigdata/
+# are tracked to document the expected data layout)
+OrGAN-files/
+weights/
+weights_cv/
+*.xlsx

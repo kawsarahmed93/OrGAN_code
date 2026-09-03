@@ -3,9 +3,8 @@ from torch.utils.data import Dataset
 import cv2
 import os
 from PIL import Image
-import random 
-random.seed(0)
-import pandas as pd 
+import random
+import pandas as pd
 import matplotlib.pyplot as plt 
 import imageio
 from scipy import ndimage
@@ -67,13 +66,15 @@ def grouper(iterable, n):
 	return zip(*args)
 
 class XrayDataset(Dataset):
-	def __init__(self, images_filenames, images_directory, l_id, transform=None, r_transform=None):
+	def __init__(self, images_filenames, images_directory, l_id, transform=None, r_transform=None, MS=False):
 		self.images_filenames = images_filenames
 		self.images_directory = images_directory
 		self.transform = transform
 		self.r_transform = r_transform
 		self.count = 0
 		self.l_id = l_id
+		self.mean_std = [1.015, 0.345, 0.574, 0.257] #  Luna16 train, Vin-Dr train
+		self.MS=MS
 
 
 	def __len__(self):
@@ -98,10 +99,10 @@ class XrayDataset(Dataset):
 
 			if s_flag:
 
-				m = image.max()
+				# m = image.max()
 
-				image = image/m
-				lungs = lungs/m
+				# image = image
+				# lungs = lungs
 
 				image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
@@ -111,7 +112,12 @@ class XrayDataset(Dataset):
 					lungs = transformed["mask"]
 
 				image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-				image, mc,sc = standardize(image,0,0)
+
+				if self.MS:
+					image, mc,sc = standardize(image,self.mean_std[0],self.mean_std[1])
+				else:
+					image, mc,sc = standardize(image,0,0)
+					
 				lungs = normal(lungs)
 				masks = lungs
 
@@ -119,10 +125,10 @@ class XrayDataset(Dataset):
 				masks = lungs
 			
 		else:
-			mn = image.min()
-
-			masks = np.float32(image)
+			# mn = image.min()
+			
 			image = np.float32(image)
+			masks = image
 
 			image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
@@ -131,7 +137,11 @@ class XrayDataset(Dataset):
 				image = transformed["image"]
 				masks = transformed["mask"]
 			image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-			image, mc,sc = standardize(image,0,0) ##
+
+			if self.MS:
+				image, mc,sc = standardize(image,self.mean_std[2],self.mean_std[3])
+			else:
+				image, mc,sc = standardize(image,0,0)
 
 		image = np.expand_dims(image, axis=2)
 		image = np.transpose(image, (2, 0, 1))
@@ -139,11 +149,13 @@ class XrayDataset(Dataset):
 		return image, masks
 
 class TXDataset(Dataset):
-	def __init__(self, images_filenames, images_directory, transform=None):
+	def __init__(self, images_filenames, images_directory, transform=None, MS=False):
 		self.images_filenames = images_filenames
 		self.images_directory = images_directory
 		self.transform = transform
 		self.count = 0
+		self.mean_std = [1.015, 0.345] #  Luna16 train
+		self.MS=MS
 
 	def __len__(self):
 		return len(self.images_filenames)
@@ -160,10 +172,10 @@ class TXDataset(Dataset):
 		lungs = np.load(os.path.join(self.images_directory.replace('Xray','Lungs'), lungs_name))
 
 		if s_flag:
-			m = image.max()
+			# m = image.max()
 
-			image = image/m
-			lungs = lungs/m
+			# image = image
+			# lungs = lungs
 
 			image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
@@ -173,7 +185,10 @@ class TXDataset(Dataset):
 				lungs = transformed["mask"]
 
 			image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-			image, mc,sc = standardize(image,0,0)
+			if self.MS:
+				image, mc,sc = standardize(image,self.mean_std[0],self.mean_std[1])
+			else:
+				image, mc,sc = standardize(image,0,0)
 			lungs = normal(lungs)
 
 			masks = lungs
@@ -187,10 +202,12 @@ class TXDataset(Dataset):
 		return image, masks
 
 class BXDataset(Dataset):
-	def __init__(self, images_filenames, images_directory, transform=None):
+	def __init__(self, images_filenames, images_directory, transform=None, MS=False):
 		self.images_filenames = images_filenames
 		self.images_directory = images_directory
 		self.transform = transform
+		self.mean_std = [0.496, 0.248] #  NIH-train
+		self.MS=MS
 
 	def __len__(self):
 		return len(self.images_filenames)
@@ -201,27 +218,33 @@ class BXDataset(Dataset):
 
 		image = cv2.imread(os.path.join(self.images_directory, image_filename), cv2.IMREAD_GRAYSCALE)
 		
-		image=image/image.max()
+		image=image/255.0
 
 		image = np.float32(image)
-
+        
 		if self.transform is not None:
 			transformed = self.transform(image=image)
 			image = transformed["image"]
 
-		image, mc,sc = standardize(image,0,0)
+		if self.MS:
+			image, mc,sc = standardize(image,self.mean_std[0],self.mean_std[1])
+		else:
+			image, mc,sc = standardize(image,0,0)
 		
 		image = np.expand_dims(image, axis=2)
 		
 		image = np.transpose(image, (2, 0, 1))
 
-		return image
+		return image, image_filename
 
 class CXDataset(Dataset):
-	def __init__(self, images_filenames, images_directory, transform=None):
+	def __init__(self, images_filenames, images_directory, transform=None, MS=False):
 		self.images_filenames = images_filenames
 		self.images_directory = images_directory
 		self.transform = transform
+		self.mean_std = [0.574, 0.257] #  Vin-Dr train
+		# self.mean_std = [1.015, 0.345] #  Luna16 train
+		self.MS=MS
 
 	def __len__(self):
 		return len(self.images_filenames)
@@ -238,19 +261,24 @@ class CXDataset(Dataset):
 			transformed = self.transform(image=image)
 			image = transformed["image"]
 
-		image, mc,sc = standardize(image,0,0)
+		if self.MS:
+			image, mc,sc = standardize(image,self.mean_std[0],self.mean_std[1])
+		else:
+			image, mc,sc = standardize(image,0,0)
 		
 		image = np.expand_dims(image, axis=2)
 		
 		image = np.transpose(image, (2, 0, 1))
 
-		return image
+		return image, image_filename
 
 class RXrayDataset(Dataset):
-	def __init__(self, images_filenames, images_directory, transform=None):
+	def __init__(self, images_filenames, images_directory, transform=None, MS=False):
 		self.images_filenames = images_filenames
 		self.images_directory = images_directory
 		self.transform = transform
+		self.mean_std = [0.574, 0.257] #  Vin-Dr train
+		self.MS=MS
 
 	def __len__(self):
 		return len(self.images_filenames)
@@ -263,17 +291,21 @@ class RXrayDataset(Dataset):
 		
 		if Xray.PhotometricInterpretation == 'MONOCHROME1':
 			image = np.amax(image) - image
-		image=resize_images(image,1024,1024,image.shape[0],image.shape[1]) ##
 
-		image=image/image.max()
+		image=image/(Xray.WindowWidth-1)
+
+		image=resize_images(image,1024,1024,image.shape[0],image.shape[1]) ##
 
 		image = np.float32(image)
 
 		if self.transform is not None:
 			transformed = self.transform(image=image)
 			image = transformed["image"]
-
-		image, mc,sc = standardize(image,0,0) 
+			
+		if self.MS:
+			image, mc,sc = standardize(image,self.mean_std[0],self.mean_std[1])
+		else:
+			image, mc,sc = standardize(image,0,0)
 		
 		image = np.expand_dims(image, axis=2)
 
@@ -343,7 +375,7 @@ def resize_images(img,desired_width,desired_height,current_width,current_height)
 	width_factor=1/width_index
 	height_factor=1/height_index
 	
-	img=ndimage.zoom(img,(width_factor,height_factor),order=3)
+	img=ndimage.zoom(img,(width_factor,height_factor),order=1)
 	
 	return img
 

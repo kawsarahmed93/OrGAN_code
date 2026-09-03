@@ -23,7 +23,10 @@ class OrGAN(nn.Module):
 		self.up5 = (DoubleConv(64, 4, 32))
 		self.outc = (OutConv(4, 1))
 
-		self.domain_classifier = (DomainClassifier(2))
+		self.domain_classifier = (DomainClassifier(2, in_channels=4))
+
+	def set_grl_alpha(self, alpha):
+		self.domain_classifier.set_alpha(alpha)
 
 	def forward(self, x):
 		x1 = self.inc(x)
@@ -38,7 +41,6 @@ class OrGAN(nn.Module):
 		x = self.up5(x)
 		c = x
 		out = self.outc(x)
-		c = c.view(c.size(0), -1)
 		logit = self.domain_classifier(c)
 		return out, logit
 
