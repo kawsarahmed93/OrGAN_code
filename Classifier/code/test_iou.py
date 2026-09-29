@@ -76,9 +76,7 @@ def get_args():
     parser = ArgumentParser(description='test')
     # parser.add_argument('--run_configs_list', type=str, default=['xray_base'])
     # parser.add_argument('--run_configs_list', type=str, nargs="*", default=['lung_base'])
-    # parser.add_argument('--run_configs_list', type=str, nargs="*", default=['bone_base'])
-    parser.add_argument('--run_configs_list', type=str, nargs="*", default=['segment_base'])
-    # parser.add_argument('--run_configs_list', type=str, nargs="*", default=['proposed'])
+    parser.add_argument('--run_configs_list', type=str, nargs="*", default=['proposed'])
     parser.add_argument('--gpu_ids', type=str, default='0')
     parser.add_argument('--n_workers', type=int, default=24)
     parser.add_argument('--batch_size', type=int, default=1)
@@ -86,6 +84,10 @@ def get_args():
     # parser.add_argument('--image_resize_dim', type=int, default=586)
     # parser.add_argument('--image_crop_dim', type=int, default=512)
     parser.add_argument('--num_classes', type=int, default=15)
+    parser.add_argument('--weight-path', dest='weight_path', type=str, default=None,
+                        help='Override the run directory (must end in /). Lets one config be '
+                             'evaluated against several trained variants without editing '
+                             'configs.py - e.g. the FusionNet xl/x0/xx/xs/xb runs.')
     parser.add_argument('--images-root', dest='images_root', type=str, default=None,
                         help='Override the image directory (must end in /). Point this at a '
                              'node-local copy made by stage_bbox_images.sh when the CBIG NFS '
@@ -181,7 +183,11 @@ def main():
     # get configs
     run_config = args.run_configs_list[0]  
     configs = all_configs[run_config]
-    weight_saving_path = configs['weight_saving_path']
+    weight_saving_path = args.weight_path or configs['weight_saving_path']
+    if not weight_saving_path.endswith('/'):
+        weight_saving_path += '/'
+    if weight_saving_path != configs['weight_saving_path']:
+        print(f'Using override run directory: {weight_saving_path}')
     
     set_random_state(args.seed)
     
@@ -389,6 +395,7 @@ def main():
                                          micro=eval_micro_iou_acc(global_iou))
     cross_fold_iou_acc_df = build_cross_fold_iou_acc_df(per_fold_iou_acc, per_fold_counts,
                                                         per_fold_micro)
+    per_fold_df = build_per_fold_df(per_fold_iou_acc, per_fold_micro, per_fold_counts)
 
     print("\n---- IoU accuracy, mean +- s.d. across the "
           f"{len(per_fold_iou_acc)} cross-validation models ----")
@@ -403,9 +410,10 @@ def main():
         with pd.ExcelWriter(path) as xl:
             cross_fold_iou_acc_df.to_excel(xl, sheet_name='cross_fold', index=False)
             pooled_iou_acc_df.to_excel(xl, sheet_name='pooled', index=False)
+            per_fold_df.to_excel(xl, sheet_name='per_fold', index=False)
     save_with_retry(_write_iou_sheets, iou_acc_excel_path)
     print(f"Saved final IoU accuracy to {iou_acc_excel_path} "
-          f"(sheets: cross_fold [report this], pooled)")
+          f"(sheets: cross_fold [report this], pooled, per_fold [for paired tests])")
 
 
     # print("\n========= CROSS-FOLD RESULTS (mean ± std) =========\n")
@@ -731,6 +739,43 @@ def build_cross_fold_iou_acc_df(per_fold_iou_acc, per_fold_counts, per_fold_micr
                           if per_fold_micro else int(sum(counts.values())))
         row['n_folds'] = len(per_fold_iou_acc)
         rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def build_per_fold_df(per_fold_iou_acc, per_fold_micro, per_fold_counts):
+    """One row per (fold, threshold, metric) - the raw material for paired tests.
+
+    Fold i of any two runs was trained on the same cross-validation split, so
+    fold i of variant A and fold i of variant B form a matched pair. Comparing
+    those pairs is far more sensitive than comparing mean +- s.d., because the
+    fold-to-fold variance that dominates the s.d. is shared by both variants
+    and cancels in the difference. Saved as its own sheet so variants can be
+    compared after the fact without re-running the evaluation.
+
+    'metric' is a finding name, or 'macro' (findings weighted equally) or
+    'micro' (boxes weighted equally).
+    """
+    thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
+    counts = dict(per_fold_counts or {})
+    keep = [c for c in DISEASE_NAMES if counts.get(c, 0) > 0]
+
+    rows = []
+    for fold, acc in enumerate(per_fold_iou_acc):
+        mic = per_fold_micro[fold] if per_fold_micro else None
+        for thr in thresholds:
+            vals = acc[f'thr_{thr}']
+            for cls in keep:
+                v = float(vals[DISEASE_NAMES.index(cls)])
+                rows.append({'fold': fold, 'threshold': thr, 'metric': cls,
+                             'n': counts[cls],
+                             'value': np.nan if np.isnan(v) else round(v, 6)})
+            m, _, n_f = iou_acc_mean_std(vals)
+            rows.append({'fold': fold, 'threshold': thr, 'metric': 'macro',
+                         'n': n_f, 'value': np.nan if np.isnan(m) else round(m, 6)})
+            if mic is not None:
+                rows.append({'fold': fold, 'threshold': thr, 'metric': 'micro',
+                             'n': int(mic['n_boxes']),
+                             'value': round(float(mic[f'thr_{thr}']), 6)})
     return pd.DataFrame(rows)
 
 
