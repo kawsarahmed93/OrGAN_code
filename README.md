@@ -9,7 +9,7 @@ Chest X-rays are inexpensive and widely accessible, particularly in rural and re
 </p>
 
 # Proposed Architecture: OrGAN
-![Architecture](images/OrGAN.png)
+![Architecture](images/OrGA.png)
 
 OrGAN has three components:
 
